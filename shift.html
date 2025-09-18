@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift - Aplikasi Kasir</title>
+    <!-- Menggunakan Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Menggunakan Google Fonts untuk tipografi -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+
+<!-- =================================================================
+     == BAGIAN 2: CSS (Gaya Tampilan)
+     == ----------------------------------------------------------- ==
+     == Bagian ini mengatur semua gaya visual aplikasi seperti warna,
+     == font, dan efek custom.
+     ================================================================= -->
+<style>
+    /* Style kustom untuk scrollbar agar lebih modern */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    
+    /* Menggunakan font Inter sebagai default */
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
+    }
+    .active-nav {
+        background-color: #0d9488;
+        color: white;
+    }
+    .nav-item:hover {
+        background-color: #14b8a6;
+        color: white;
+    }
+    .active-tab {
+        border-bottom: 3px solid #0d9488;
+        color: #0d9488;
+        font-weight: 600;
+    }
+</style>
+
+<body class="antialiased text-slate-800">
+
+<!-- =================================================================
+     == BAGIAN 1: HTML (Struktur Halaman)
+     == ----------------------------------------------------------- ==
+     == Bagian ini berisi semua elemen yang membentuk tampilan
+     == aplikasi, seperti sidebar dan area konten utama.
+     ================================================================= -->
+<div class="flex flex-col lg:flex-row min-h-screen">
+    <!-- Sidebar Navigasi -->
+    <nav class="bg-teal-600 text-white w-full lg:w-64 flex-shrink-0">
+        <div class="flex items-center justify-center p-4 lg:p-6 shadow-md">
+            <i class="ri-shopping-cart-2-fill text-3xl mr-3"></i>
+            <h1 class="text-xl font-bold">KasirKu V2</h1>
+        </div>
+        <ul class="flex flex-row lg:flex-col p-2 lg:p-4 lg:space-y-2 justify-center lg:justify-start">
+            <li><a href="aplikasi-kasir-v2.html" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-money-dollar-box-line text-xl mr-3"></i><span class="hidden lg:inline">Transaksi</span></a></li>
+            <li><a href="database.html" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-database-2-line text-xl mr-3"></i><span class="hidden lg:inline">Database</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item active-nav"><i class="ri-time-line text-xl mr-3"></i><span class="hidden lg:inline">Shift</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-file-chart-line text-xl mr-3"></i><span class="hidden lg:inline">Laporan</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-bank-line text-xl mr-3"></i><span class="hidden lg:inline">Keuangan</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-settings-3-line text-xl mr-3"></i><span class="hidden lg:inline">Pengaturan</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 p-4 lg:p-6 xl:p-8">
+        <div class="bg-white rounded-xl shadow-md h-full flex flex-col">
+            <!-- Header dan Tab -->
+            <div class="p-4 md:p-6 border-b border-slate-200 flex-shrink-0">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Manajemen Shift</h2>
+                <div class="flex border-b border-slate-200">
+                    <button class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap active-tab">Buka/Tutup Shift</button>
+                    <button class="px-4 py-3 text-sm text-slate-500 hover:text-slate-800 whitespace-nowrap">Riwayat Shift</button>
+                </div>
+            </div>
+
+            <!-- Konten Shift -->
+            <div class="p-4 md:p-6 flex-grow">
+                <!-- Tampilan Saat Shift Belum Dibuka -->
+                <div id="start-shift-view">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 rounded-md mb-6">
+                        <p class="font-bold">Informasi</p>
+                        <p>Saat ini shift belum dibuka. Silakan isi data di bawah untuk memulai shift.</p>
+                    </div>
+
+                    <div class="space-y-6 max-w-2xl">
+                        <div>
+                            <h3 class="font-semibold text-lg mb-2">Informasi Staff</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div class="bg-slate-100 p-3 rounded-md">
+                                    <label class="text-slate-500 block">Nama Staff</label>
+                                    <p class="font-semibold">Jane Doe</p>
+                                </div>
+                                <div class="bg-slate-100 p-3 rounded-md">
+                                    <label class="text-slate-500 block">Posisi</label>
+                                    <p class="font-semibold">Kasir Utama</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                             <label for="cashier-station" class="block font-semibold mb-2">Pilih Nomor Kasir</label>
+                             <select id="cashier-station" class="w-full md:w-1/2 p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                 <option value="">-- Pilih Tempat Kasir --</option>
+                                 <option value="1">Kasir 1</option>
+                                 <option value="2">Kasir 2</option>
+                                 <option value="3">Kasir 3</option>
+                             </select>
+                        </div>
+                        
+                        <div class="border-t border-slate-200 pt-6">
+                            <h3 class="font-semibold text-lg mb-2">Modal Awal Kas</h3>
+                             <div>
+                                 <label for="starting-cash" class="block font-semibold mb-2">Total Nominal</label>
+                                 <input type="number" id="starting-cash" placeholder="Contoh: 500000" class="w-full md:w-1/2 p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                             </div>
+                        </div>
+                    </div>
+                     <div class="mt-8 flex justify-end">
+                        <button id="start-shift-btn" class="bg-teal-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-teal-600 transition shadow">
+                            Mulai Shift
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tampilan Saat Shift Sedang Berlangsung -->
+                <div id="active-shift-view" class="hidden">
+                    <div class="bg-green-50 border-l-4 border-green-500 text-green-800 p-4 rounded-md mb-6">
+                        <p class="font-bold">Shift Sedang Aktif</p>
+                        <p>Shift dimulai pada: <span id="shift-start-time" class="font-semibold"></span></p>
+                    </div>
+                    
+                     <div class="space-y-6 max-w-2xl">
+                        <div>
+                            <h3 class="font-semibold text-lg mb-2">Detail Shift</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div class="bg-slate-100 p-3 rounded-md">
+                                    <label class="text-slate-500 block">Nama Staff</label>
+                                    <p id="active-staff-name" class="font-semibold">Jane Doe</p>
+                                </div>
+                                <div class="bg-slate-100 p-3 rounded-md">
+                                    <label class="text-slate-500 block">Nomor Kasir</label>
+                                    <p id="active-cashier-station" class="font-semibold"></p>
+                                </div>
+                                <div class="bg-slate-100 p-3 rounded-md col-span-1 md:col-span-2">
+                                    <label class="text-slate-500 block">Modal Awal</label>
+                                    <p id="active-starting-cash" class="font-bold text-teal-600 text-lg"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-200 pt-6">
+                             <h3 class="font-semibold text-lg mb-2">Ringkasan Transaksi (Live)</h3>
+                             <p class="text-sm text-slate-500 mb-4">Data akan diperbarui secara otomatis.</p>
+                             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <div class="bg-blue-100 p-4 rounded-md text-center">
+                                    <p class="text-sm text-blue-800">Total Penjualan</p>
+                                    <p class="font-bold text-xl text-blue-900">Rp 1.250.000</p>
+                                </div>
+                                 <div class="bg-yellow-100 p-4 rounded-md text-center">
+                                    <p class="text-sm text-yellow-800">Transaksi</p>
+                                    <p class="font-bold text-xl text-yellow-900">32</p>
+                                </div>
+                                <div class="bg-red-100 p-4 rounded-md text-center">
+                                    <p class="text-sm text-red-800">Pengembalian</p>
+                                    <p class="font-bold text-xl text-red-900">Rp 0</p>
+                                </div>
+                             </div>
+                        </div>
+                     </div>
+                     <div class="mt-8 flex justify-end">
+                        <button id="end-shift-btn" class="bg-red-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-red-600 transition shadow">
+                            Akhiri Shift & Laporan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- =================================================================
+     == BAGIAN 3: JAVASCRIPT (Logika & Fungsionalitas)
+     == ----------------------------------------------------------- ==
+     == Bagian ini menghidupkan aplikasi, mengelola status shift,
+     == dan menangani interaksi pengguna.
+     ================================================================= -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- STATE ---
+    // =============
+    let isShiftActive = false;
+    let shiftData = {};
+
+    // --- DOM SELECTORS ---
+    // =====================
+    const startShiftView = document.getElementById('start-shift-view');
+    const activeShiftView = document.getElementById('active-shift-view');
+    const startShiftBtn = document.getElementById('start-shift-btn');
+    const endShiftBtn = document.getElementById('end-shift-btn');
+    
+    // Form Inputs
+    const cashierStationSelect = document.getElementById('cashier-station');
+    const startingCashInput = document.getElementById('starting-cash');
+
+    // Active Shift Display
+    const shiftStartTimeEl = document.getElementById('shift-start-time');
+    const activeCashierStationEl = document.getElementById('active-cashier-station');
+    const activeStartingCashEl = document.getElementById('active-starting-cash');
+
+    // --- UI FUNCTIONS ---
+    // ==================
+    const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+    
+    const updateShiftView = () => {
+        if (isShiftActive) {
+            startShiftView.classList.add('hidden');
+            activeShiftView.classList.remove('hidden');
+
+            // Populate active shift data
+            shiftStartTimeEl.textContent = shiftData.startTime.toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' });
+            activeCashierStationEl.textContent = `Kasir ${shiftData.station}`;
+            activeStartingCashEl.textContent = formatCurrency(shiftData.startingCash);
+        } else {
+            startShiftView.classList.remove('hidden');
+            activeShiftView.classList.add('hidden');
+            
+            // Reset form
+            cashierStationSelect.value = '';
+            startingCashInput.value = '';
+        }
+    };
+
+    // --- EVENT LISTENERS ---
+    // =======================
+    startShiftBtn.addEventListener('click', () => {
+        const station = cashierStationSelect.value;
+        const cash = parseFloat(startingCashInput.value);
+
+        if (!station) {
+            alert('Silakan pilih nomor kasir terlebih dahulu.');
+            return;
+        }
+        if (isNaN(cash) || cash < 0) {
+            alert('Silakan masukkan jumlah modal awal yang valid.');
+            return;
+        }
+
+        // Save shift data and update state
+        shiftData = {
+            station: station,
+            startingCash: cash,
+            startTime: new Date()
+        };
+        isShiftActive = true;
+        
+        updateShiftView();
+    });
+
+    endShiftBtn.addEventListener('click', () => {
+        if (confirm('Apakah Anda yakin ingin mengakhiri shift ini?')) {
+            isShiftActive = false;
+            shiftData = {};
+            updateShiftView();
+        }
+    });
+
+    // --- INITIALIZATION ---
+    // ======================
+    updateShiftView(); // Initial view render
+});
+</script>
+</body>
+</html>

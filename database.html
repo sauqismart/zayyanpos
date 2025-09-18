@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database - Aplikasi Kasir</title>
+    <!-- Menggunakan Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Menggunakan Google Fonts untuk tipografi -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+
+<!-- =================================================================
+     == BAGIAN 2: CSS (Gaya Tampilan)
+     == ----------------------------------------------------------- ==
+     == Bagian ini mengatur semua gaya visual aplikasi seperti warna,
+     == font, dan efek custom.
+     ================================================================= -->
+<style>
+    /* Style kustom untuk scrollbar agar lebih modern */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    
+    /* Menggunakan font Inter sebagai default */
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc; /* Warna latar belakang lebih cerah */
+    }
+    .active-nav {
+        background-color: #0d9488;
+        color: white;
+    }
+    .nav-item:hover {
+        background-color: #14b8a6;
+        color: white;
+    }
+    .active-tab {
+        border-bottom: 3px solid #0d9488;
+        color: #0d9488;
+        font-weight: 600;
+    }
+    /* Animasi untuk modal */
+    .modal-enter { opacity: 0; transform: scale(0.95); }
+    .modal-enter-active { opacity: 1; transform: scale(1); transition: all 300ms ease-out; }
+    .modal-leave-active { opacity: 0; transform: scale(0.95); transition: all 300ms ease-in; }
+</style>
+
+<body class="antialiased text-slate-800">
+
+<!-- =================================================================
+     == BAGIAN 1: HTML (Struktur Halaman)
+     == ----------------------------------------------------------- ==
+     == Bagian ini berisi semua elemen yang membentuk tampilan
+     == aplikasi, seperti sidebar, area utama, tabel, dan modal.
+     ================================================================= -->
+<div class="flex flex-col lg:flex-row min-h-screen">
+    <!-- Sidebar Navigasi -->
+    <nav class="bg-teal-600 text-white w-full lg:w-64 flex-shrink-0">
+        <div class="flex items-center justify-center p-4 lg:p-6 shadow-md">
+            <i class="ri-shopping-cart-2-fill text-3xl mr-3"></i>
+            <h1 class="text-xl font-bold">KasirKu V2</h1>
+        </div>
+        <ul class="flex flex-row lg:flex-col p-2 lg:p-4 lg:space-y-2 justify-center lg:justify-start">
+            <li><a href="aplikasi-kasir-v2.html" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-money-dollar-box-line text-xl mr-3"></i><span class="hidden lg:inline">Transaksi</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item active-nav"><i class="ri-database-2-line text-xl mr-3"></i><span class="hidden lg:inline">Database</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-time-line text-xl mr-3"></i><span class="hidden lg:inline">Shift</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-file-chart-line text-xl mr-3"></i><span class="hidden lg:inline">Laporan</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-bank-line text-xl mr-3"></i><span class="hidden lg:inline">Keuangan</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-settings-3-line text-xl mr-3"></i><span class="hidden lg:inline">Pengaturan</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 p-4 lg:p-6 xl:p-8">
+        <div class="bg-white rounded-xl shadow-md h-full flex flex-col">
+            <!-- Header dan Tab -->
+            <div class="p-4 md:p-6 border-b border-slate-200 flex-shrink-0">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Database</h2>
+                <div class="overflow-x-auto">
+                    <div class="flex border-b border-slate-200">
+                        <button class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap active-tab">Barang</button>
+                        <button class="px-4 py-3 text-sm text-slate-500 hover:text-slate-800 whitespace-nowrap">Supplier</button>
+                        <button class="px-4 py-3 text-sm text-slate-500 hover:text-slate-800 whitespace-nowrap">Pelanggan</button>
+                        <button class="px-4 py-3 text-sm text-slate-500 hover:text-slate-800 whitespace-nowrap">Kategori</button>
+                        <button class="px-4 py-3 text-sm text-slate-500 hover:text-slate-800 whitespace-nowrap">Pajak</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aksi dan Pencarian -->
+            <div class="p-4 md:p-6 flex-shrink-0">
+                <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+                    <div class="relative w-full md:w-auto">
+                        <input type="text" id="search-db-input" placeholder="Cari barang..." class="w-full md:w-80 pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition">
+                        <i class="ri-search-line text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    </div>
+                    <button id="add-item-btn" class="w-full md:w-auto bg-teal-500 text-white font-semibold px-5 py-2 rounded-lg hover:bg-teal-600 transition shadow flex items-center justify-center">
+                        <i class="ri-add-line mr-2"></i> Tambah Barang
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabel Database -->
+            <div class="overflow-x-auto flex-grow">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 sticky top-0">
+                        <tr>
+                            <th class="p-4 font-semibold text-slate-600 text-sm">KODE BARANG</th>
+                            <th class="p-4 font-semibold text-slate-600 text-sm">NAMA BARANG</th>
+                            <th class="p-4 font-semibold text-slate-600 text-sm">KATEGORI</th>
+                            <th class="p-4 font-semibold text-slate-600 text-sm text-right">HARGA JUAL</th>
+                            <th class="p-4 font-semibold text-slate-600 text-sm text-center">STOK</th>
+                            <th class="p-4 font-semibold text-slate-600 text-sm text-center">AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="database-table-body">
+                        <!-- Data akan di-render oleh JavaScript -->
+                    </tbody>
+                </table>
+                 <div id="empty-db-message" class="hidden">
+                    <div class="text-center p-16 text-slate-400">
+                        <i class="ri-database-2-line text-5xl mb-4"></i>
+                        <p class="font-medium">Data tidak ditemukan</p>
+                        <p class="text-sm">Coba ubah kata kunci pencarian Anda.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal Tambah/Edit Barang -->
+<div id="item-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 p-4">
+    <div id="item-modal-box" class="bg-white rounded-lg shadow-xl w-full max-w-lg modal-enter">
+        <div class="flex justify-between items-center p-4 border-b border-slate-200">
+            <h3 id="modal-title" class="text-xl font-bold">Tambah Barang Baru</h3>
+            <button id="close-item-modal-btn" class="text-slate-500 hover:text-slate-800 text-2xl">&times;</button>
+        </div>
+        <form id="item-form" class="p-6 space-y-4">
+            <input type="hidden" id="item-id">
+            <div>
+                <label for="item-code" class="block text-sm font-medium text-slate-700 mb-1">Kode Barang</label>
+                <input type="text" id="item-code" class="w-full p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+            </div>
+            <div>
+                <label for="item-name" class="block text-sm font-medium text-slate-700 mb-1">Nama Barang</label>
+                <input type="text" id="item-name" class="w-full p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="item-category" class="block text-sm font-medium text-slate-700 mb-1">Kategori</label>
+                    <select id="item-category" class="w-full p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                        <option>Makanan</option>
+                        <option>Minuman</option>
+                        <option>Snack</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="item-stock" class="block text-sm font-medium text-slate-700 mb-1">Stok</label>
+                    <input type="number" id="item-stock" value="0" class="w-full p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                </div>
+            </div>
+             <div>
+                <label for="item-price" class="block text-sm font-medium text-slate-700 mb-1">Harga Jual (Rp)</label>
+                <input type="number" id="item-price" placeholder="Contoh: 18000" class="w-full p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+            </div>
+            <div class="flex justify-end p-4 bg-slate-50 rounded-b-lg">
+                 <button type="button" id="cancel-btn" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-lg hover:bg-slate-300 mr-3">Batal</button>
+                 <button type="submit" class="px-4 py-2 bg-teal-500 text-white font-semibold rounded-lg hover:bg-teal-600">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- =================================================================
+     == BAGIAN 3: JAVASCRIPT (Logika & Fungsionalitas)
+     == ----------------------------------------------------------- ==
+     == Bagian ini menghidupkan aplikasi. Semua logika perhitungan,
+     == interaksi pengguna, dan manipulasi data ada di sini.
+     ================================================================= -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DATA & STATE ---
+    // ====================
+    let databaseItems = [
+        { id: 'P001', name: 'Kopi Susu Gula Aren', category: 'Minuman', price: 18000, stock: 50 },
+        { id: 'P002', name: 'Americano', category: 'Minuman', price: 15000, stock: 75 },
+        { id: 'P003', name: 'Croissant Cokelat', category: 'Makanan', price: 22000, stock: 30 },
+        { id: 'P004', name: 'Teh Lemon Jahe', category: 'Minuman', price: 16000, stock: 40 },
+        { id: 'P005', name: 'Air Mineral', category: 'Minuman', price: 5000, stock: 100 },
+        { id: 'P006', name: 'Donat Gula', category: 'Snack', price: 8000, stock: 60 },
+        { id: 'P007', name: 'Matcha Latte', category: 'Minuman', price: 25000, stock: 35 },
+        { id: 'P008', name: 'Kentang Goreng', category: 'Snack', price: 15000, stock: 80 },
+    ];
+
+    // --- DOM SELECTORS ---
+    // =====================
+    const databaseTableBody = document.getElementById('database-table-body');
+    const searchDbInput = document.getElementById('search-db-input');
+    const emptyDbMessage = document.getElementById('empty-db-message');
+    
+    // Modal elements
+    const itemModal = document.getElementById('item-modal');
+    const itemModalBox = document.getElementById('item-modal-box');
+    const modalTitle = document.getElementById('modal-title');
+    const addItemBtn = document.getElementById('add-item-btn');
+    const closeItemModalBtn = document.getElementById('close-item-modal-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const itemForm = document.getElementById('item-form');
+
+
+    // --- UI FUNCTIONS ---
+    // ==================
+    const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+
+    const renderTable = (filter = '') => {
+        databaseTableBody.innerHTML = '';
+        const filteredItems = databaseItems.filter(item => 
+            item.name.toLowerCase().includes(filter.toLowerCase()) ||
+            item.id.toLowerCase().includes(filter.toLowerCase())
+        );
+
+        if (filteredItems.length === 0) {
+            emptyDbMessage.classList.remove('hidden');
+        } else {
+            emptyDbMessage.classList.add('hidden');
+            filteredItems.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-slate-200 hover:bg-slate-50';
+                tr.innerHTML = `
+                    <td class="p-4 text-sm font-medium text-slate-700">${item.id}</td>
+                    <td class="p-4 text-sm">${item.name}</td>
+                    <td class="p-4 text-sm"><span class="bg-slate-200 text-slate-700 text-xs font-semibold px-2 py-1 rounded-full">${item.category}</span></td>
+                    <td class="p-4 text-sm text-right font-semibold">${formatCurrency(item.price)}</td>
+                    <td class="p-4 text-sm text-center">${item.stock}</td>
+                    <td class="p-4 text-sm text-center">
+                        <button data-id="${item.id}" class="edit-btn text-blue-500 hover:text-blue-700 p-1"><i class="ri-pencil-line"></i></button>
+                        <button data-id="${item.id}" class="delete-btn text-red-500 hover:text-red-700 p-1"><i class="ri-delete-bin-line"></i></button>
+                    </td>
+                `;
+                databaseTableBody.appendChild(tr);
+            });
+        }
+    };
+    
+    const toggleModal = (show) => {
+        if (show) {
+            itemModal.classList.remove('hidden');
+            setTimeout(() => itemModalBox.classList.add('modal-enter-active'), 10);
+        } else {
+            itemModalBox.classList.remove('modal-enter-active');
+            itemModalBox.classList.add('modal-leave-active');
+            setTimeout(() => {
+                itemModal.classList.add('hidden');
+                itemModalBox.classList.remove('modal-leave-active');
+            }, 300);
+        }
+    };
+    
+    const openModalForNew = () => {
+        modalTitle.textContent = 'Tambah Barang Baru';
+        itemForm.reset();
+        document.getElementById('item-id').value = '';
+        document.getElementById('item-code').readOnly = false;
+        toggleModal(true);
+    };
+
+    const openModalForEdit = (itemId) => {
+        const item = databaseItems.find(i => i.id === itemId);
+        if (!item) return;
+        
+        modalTitle.textContent = 'Edit Barang';
+        document.getElementById('item-id').value = item.id;
+        document.getElementById('item-code').value = item.id;
+        document.getElementById('item-code').readOnly = true; // Kode barang tidak bisa diubah
+        document.getElementById('item-name').value = item.name;
+        document.getElementById('item-category').value = item.category;
+        document.getElementById('item-stock').value = item.stock;
+        document.getElementById('item-price').value = item.price;
+        toggleModal(true);
+    };
+
+
+    // --- LOGIC FUNCTIONS ---
+    // =====================
+    const saveItem = (e) => {
+        e.preventDefault();
+        const id = document.getElementById('item-id').value;
+        const newItem = {
+            id: document.getElementById('item-code').value,
+            name: document.getElementById('item-name').value,
+            category: document.getElementById('item-category').value,
+            stock: parseInt(document.getElementById('item-stock').value),
+            price: parseFloat(document.getElementById('item-price').value),
+        };
+
+        if (id) { // Edit mode
+            const index = databaseItems.findIndex(i => i.id === id);
+            databaseItems[index] = { ...databaseItems[index], ...newItem };
+        } else { // New mode
+            // Cek jika ID sudah ada
+            if (databaseItems.some(item => item.id === newItem.id)) {
+                alert('Kode Barang sudah ada. Harap gunakan kode yang unik.');
+                return;
+            }
+            databaseItems.push(newItem);
+        }
+        renderTable();
+        toggleModal(false);
+    };
+
+    const deleteItem = (itemId) => {
+        if (confirm(`Apakah Anda yakin ingin menghapus barang dengan kode ${itemId}?`)) {
+            databaseItems = databaseItems.filter(item => item.id !== itemId);
+            renderTable();
+        }
+    };
+
+    // --- EVENT LISTENERS ---
+    // =======================
+    searchDbInput.addEventListener('input', (e) => renderTable(e.target.value));
+    
+    addItemBtn.addEventListener('click', openModalForNew);
+    closeItemModalBtn.addEventListener('click', () => toggleModal(false));
+    cancelBtn.addEventListener('click', () => toggleModal(false));
+    
+    itemForm.addEventListener('submit', saveItem);
+    
+    databaseTableBody.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('.edit-btn');
+        const deleteBtn = e.target.closest('.delete-btn');
+
+        if (editBtn) {
+            openModalForEdit(editBtn.dataset.id);
+        }
+        if (deleteBtn) {
+            deleteItem(deleteBtn.dataset.id);
+        }
+    });
+
+    // --- INITIALIZATION ---
+    // ======================
+    renderTable();
+});
+</script>
+</body>
+</html>

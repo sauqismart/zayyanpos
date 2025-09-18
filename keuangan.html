@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keuangan - Aplikasi Kasir</title>
+    <!-- Menggunakan Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Menggunakan Google Fonts untuk tipografi -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+
+<!-- =================================================================
+     == BAGIAN 2: CSS (Gaya Tampilan)
+     == ----------------------------------------------------------- ==
+     == Bagian ini mengatur semua gaya visual aplikasi seperti warna,
+     == font, dan efek custom.
+     ================================================================= -->
+<style>
+    /* Style kustom untuk scrollbar agar lebih modern */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    
+    /* Menggunakan font Inter sebagai default */
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafc;
+    }
+    .active-nav {
+        background-color: #0d9488;
+        color: white;
+    }
+    .nav-item:hover {
+        background-color: #14b8a6;
+        color: white;
+    }
+</style>
+
+<body class="antialiased text-slate-800">
+
+<!-- =================================================================
+     == BAGIAN 1: HTML (Struktur Halaman)
+     == ----------------------------------------------------------- ==
+     == Bagian ini berisi semua elemen yang membentuk tampilan
+     == aplikasi, seperti sidebar dan area konten utama.
+     ================================================================= -->
+<div class="flex flex-col lg:flex-row min-h-screen">
+    <!-- Sidebar Navigasi -->
+    <nav class="bg-teal-600 text-white w-full lg:w-64 flex-shrink-0">
+        <div class="flex items-center justify-center p-4 lg:p-6 shadow-md">
+            <i class="ri-shopping-cart-2-fill text-3xl mr-3"></i>
+            <h1 class="text-xl font-bold">KasirKu V2</h1>
+        </div>
+        <ul class="flex flex-row lg:flex-col p-2 lg:p-4 lg:space-y-2 justify-center lg:justify-start">
+            <li><a href="aplikasi-kasir-v2.html" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-money-dollar-box-line text-xl mr-3"></i><span class="hidden lg:inline">Transaksi</span></a></li>
+            <li><a href="database.html" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-database-2-line text-xl mr-3"></i><span class="hidden lg:inline">Database</span></a></li>
+            <li><a href="shift.html" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-time-line text-xl mr-3"></i><span class="hidden lg:inline">Shift</span></a></li>
+            <li><a href="laporan.html" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-file-chart-line text-xl mr-3"></i><span class="hidden lg:inline">Laporan</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item active-nav"><i class="ri-bank-line text-xl mr-3"></i><span class="hidden lg:inline">Keuangan</span></a></li>
+            <li><a href="#" class="flex items-center p-3 rounded-lg nav-item"><i class="ri-settings-3-line text-xl mr-3"></i><span class="hidden lg:inline">Pengaturan</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 p-4 lg:p-6 xl:p-8">
+        <div class="bg-white rounded-xl shadow-md h-full flex flex-col">
+            <!-- Header -->
+            <div class="p-4 md:p-6 border-b border-slate-200 flex-shrink-0">
+                <h2 class="text-2xl font-bold text-slate-800">Keuangan</h2>
+            </div>
+
+            <div class="flex flex-col lg:flex-row flex-grow">
+                <!-- Kolom Form Input -->
+                <div class="w-full lg:w-1/3 p-4 md:p-6 border-b lg:border-b-0 lg:border-r border-slate-200">
+                    <h3 class="font-bold text-lg mb-4">Tambah Transaksi Keuangan</h3>
+                    <form id="finance-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Jenis Transaksi</label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center">
+                                    <input type="radio" name="type" value="income" class="form-radio text-teal-600 focus:ring-teal-500" checked>
+                                    <span class="ml-2">Pemasukan</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="type" value="expense" class="form-radio text-red-600 focus:ring-red-500">
+                                    <span class="ml-2">Pengeluaran</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="amount" class="block text-sm font-medium text-slate-700 mb-1">Nominal</label>
+                            <input type="number" id="amount" placeholder="Rp 0" class="w-full p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                        </div>
+                         <div>
+                            <label for="description" class="block text-sm font-medium text-slate-700 mb-1">Keterangan</label>
+                            <input type="text" id="description" placeholder="Contoh: Pembelian stok kopi" class="w-full p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                        </div>
+                        <div>
+                            <label for="notes" class="block text-sm font-medium text-slate-700 mb-1">Catatan (Opsional)</label>
+                            <textarea id="notes" rows="3" class="w-full p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full bg-teal-500 text-white font-semibold py-2.5 rounded-lg hover:bg-teal-600 transition shadow">
+                                Simpan Transaksi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Kolom Riwayat & Saldo -->
+                <div class="w-full lg:w-2/3 flex flex-col">
+                    <!-- Ringkasan Saldo -->
+                    <div class="p-4 md:p-6 grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-slate-200">
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <p class="text-sm text-green-600 font-semibold">Total Pemasukan</p>
+                            <p id="total-income" class="text-xl font-bold text-green-800">Rp 0</p>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg">
+                            <p class="text-sm text-red-600 font-semibold">Total Pengeluaran</p>
+                            <p id="total-expense" class="text-xl font-bold text-red-800">Rp 0</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="text-sm text-blue-600 font-semibold">Saldo Akhir</p>
+                            <p id="final-balance" class="text-xl font-bold text-blue-800">Rp 0</p>
+                        </div>
+                    </div>
+
+                    <!-- Riwayat Transaksi -->
+                    <div class="p-4 md:p-6 flex-grow overflow-auto">
+                        <h3 class="font-bold text-lg mb-4">Riwayat Transaksi</h3>
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 sticky top-0">
+                                <tr>
+                                    <th class="p-3 font-semibold text-slate-600 text-sm">KETERANGAN</th>
+                                    <th class="p-3 font-semibold text-slate-600 text-sm text-right">NOMINAL</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactions-body">
+                                <!-- Data di-render oleh JavaScript -->
+                            </tbody>
+                        </table>
+                        <div id="empty-finance-message" class="hidden text-center p-10 text-slate-400">
+                            <i class="ri-file-list-3-line text-4xl mb-2"></i>
+                            <p>Belum ada transaksi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- =================================================================
+     == BAGIAN 3: JAVASCRIPT (Logika & Fungsionalitas)
+     == ----------------------------------------------------------- ==
+     == Bagian ini menghidupkan aplikasi, mengelola data keuangan,
+     == dan menangani interaksi pengguna.
+     ================================================================= -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- SAMPLE DATA & STATE ---
+    // ===========================
+    let transactions = [
+        { id: 1, type: 'income', amount: 500000, description: 'Modal awal shift pagi', notes: 'Diserahkan oleh manager', date: '2025-09-19' },
+        { id: 2, type: 'expense', amount: 75000, description: 'Beli 1kg biji kopi Arabica', notes: 'Supplier Kopi Jaya', date: '2025-09-19' },
+        { id: 3, type: 'expense', amount: 45000, description: 'Beli susu full cream 2L', notes: '', date: '2025-09-19' }
+    ];
+
+    // --- DOM SELECTORS ---
+    // =====================
+    const financeForm = document.getElementById('finance-form');
+    const transactionsBody = document.getElementById('transactions-body');
+    const emptyMessage = document.getElementById('empty-finance-message');
+    const totalIncomeEl = document.getElementById('total-income');
+    const totalExpenseEl = document.getElementById('total-expense');
+    const finalBalanceEl = document.getElementById('final-balance');
+    
+    // --- UI FUNCTIONS ---
+    // ==================
+    const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+
+    const renderTransactions = () => {
+        transactionsBody.innerHTML = '';
+
+        if (transactions.length === 0) {
+            emptyMessage.classList.remove('hidden');
+            return;
+        }
+        
+        emptyMessage.classList.add('hidden');
+        
+        // Mengurutkan transaksi dari yang terbaru
+        const sortedTransactions = [...transactions].reverse();
+
+        sortedTransactions.forEach(tx => {
+            const isIncome = tx.type === 'income';
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-slate-200';
+            tr.innerHTML = `
+                <td class="p-3">
+                    <p class="font-medium">${tx.description}</p>
+                    <p class="text-xs text-slate-500">${new Date(tx.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                </td>
+                <td class="p-3 text-right">
+                    <p class="font-semibold ${isIncome ? 'text-green-600' : 'text-red-600'}">
+                        ${isIncome ? '+' : '-'} ${formatCurrency(tx.amount)}
+                    </p>
+                </td>
+            `;
+            transactionsBody.appendChild(tr);
+        });
+    };
+
+    const updateSummary = () => {
+        const totalIncome = transactions
+            .filter(tx => tx.type === 'income')
+            .reduce((sum, tx) => sum + tx.amount, 0);
+
+        const totalExpense = transactions
+            .filter(tx => tx.type === 'expense')
+            .reduce((sum, tx) => sum + tx.amount, 0);
+
+        const finalBalance = totalIncome - totalExpense;
+
+        totalIncomeEl.textContent = formatCurrency(totalIncome);
+        totalExpenseEl.textContent = formatCurrency(totalExpense);
+        finalBalanceEl.textContent = formatCurrency(finalBalance);
+    };
+
+    // --- EVENT LISTENERS ---
+    // =======================
+    financeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const type = financeForm.elements.type.value;
+        const amount = parseFloat(document.getElementById('amount').value);
+        const description = document.getElementById('description').value;
+        const notes = document.getElementById('notes').value;
+
+        if (isNaN(amount) || amount <= 0) {
+            alert('Masukkan nominal yang valid.');
+            return;
+        }
+
+        const newTransaction = {
+            id: Date.now(), // Unique ID based on timestamp
+            type,
+            amount,
+            description,
+            notes,
+            date: new Date().toISOString().split('T')[0]
+        };
+
+        transactions.push(newTransaction);
+        
+        renderTransactions();
+        updateSummary();
+        financeForm.reset();
+    });
+
+    // --- INITIALIZATION ---
+    // ======================
+    renderTransactions();
+    updateSummary();
+});
+</script>
+</body>
+</html>
